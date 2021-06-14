@@ -1,0 +1,7 @@
+Una simulación sin la contratación extra.
+Una simulacion distinta con la contratación extra. Graph_no_hire pero en posición 2 tiene distintos precios.
+Se llama a simulate una vez con el proyecto original.
+Se llama a simulate una segunda vez para ver qué pasaría con las probabilidades una vez que se bajó la estimación del peor caso.
+Llamar a get_path_duration 6 veces una por cada camino. De entre los posibles caminos nos quedamos con el max en duración.
+Simulaciones se ponen en una lista task_times. Método usa eso como input.
+Nodos de decisión y de eventos. Nodos que no tienen nada, nodos que tienen penalización y nodos que tienen bono.
