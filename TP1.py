@@ -3,6 +3,7 @@ import random
 import statistics
 import matplotlib.pyplot as plt
 from scipy.stats import expon,uniform,triang
+from numpy import random
 import sys
 
 class ProjectGraph:
@@ -49,14 +50,14 @@ class ProjectGraph:
         return [[0,1,2,3,6,7,12],[0,1,2,4,7,12],[0,1,2,4,5,9,10,13],[0,1,2,4,5,9,11,13],[0,1,2,8,9,10,13],[0,1,2,8,9,11,13]]
 
 
-def simulate_triangular(op,ml,ps):
+def simulate_triangular(ps,ml,op):
     # TP1 TODO: Completar codigo
     # Esta funcion toma los 3 parametros de la distribucion triangular
     # y devuelve un numero psuedo-aleaotrio con esta distribucion.
     if op == ps:
         return ml
     else:
-        triangular = random.triangular(op, ml, ps)
+        triangular = random.triangular(ps, ml, op)
         return triangular
     #VER SI FUNCIONA
     #scipy.stats.triang o numpy.random.triangular
@@ -66,7 +67,7 @@ def simulate_triangular(op,ml,ps):
     # Primero un chequeo: si op == ps, entonces no hay mucho para simular.
     # Por que?
     #tarea 4
-    
+
 
     # Esta es la traduccion de parametros a realizar scipy.stats. Revisar la documentaicon
     # y entender como se representa la distribucion.
@@ -78,10 +79,12 @@ def simulate_triangular(op,ml,ps):
 
 
 def simulate_tasks_duration(project_graph):
-    task_times = []
-    for i in range(13):
-        task_times.append(simulate_triangular(project_graph.get_tasks_dist_params[i]()))
-    
+    tasks_times = []
+    times = project_graph.get_tasks_dist_params()
+    for i in range(len(times)):
+        task_times.append(simulate_triangular(times[i])
+    return tasks_times
+
     # TP1 TODO: Completar codigo
     # Esta funcion el grafo con n tareas, cada cual con sus parametros de la
     # correspondiente distribucion triangular, y devuelve una lista de
@@ -96,10 +99,9 @@ def simulate_tasks_duration(project_graph):
 
 def get_path_duration(path, tasks_times):
     pathduration = 0
-    #REVISAR SI LEN +1 O -1 O NADA
-    for i in len(path):
-        pathduration += tasks_times[path[i]]
-        
+    for task in path:
+        pathduration += tasks_times[task]
+
 
     # TODO TP1: Completar codigo
     # Dado un camino, representado por path y la secuencia de tareas, y la
@@ -111,11 +113,23 @@ def get_path_duration(path, tasks_times):
 
 def get_project_duration(project_graph, tasks_times):
     projectduration = 0
-    for i in range(5):
-        if get_path_duration(project_graph[i], tasks_times) > projectduration:
-            projectduration = get_path_duration(project_graph[i], tasks_times)
+    project = project_graph.get_paths()
+    for path in project:
+        path_duration = get_path_duration(path, tasks_times)
+        if path_duration > projectduration:
+            projectduration = path_duration
     return projectduration
-            
+
+
+#ALTERNATIVA
+# paths = graph.get_paths()
+# max_duration = 0
+# for path in paths:
+#     new_duration = get_path_duration(path, tasks_times)
+#     max_duration = max(max_duration, new_duration)
+
+#Ahi max_duration tiene la duracion del camino mas largo
+
 
     # TODO TP1: Completar codigo
     # La duracion del proyecto corresponde al maximo de las duraciones de los caminos.
@@ -130,7 +144,7 @@ def get_project_duration(project_graph, tasks_times):
 
 def simulate(n_sim, project_graph):
     simulations = []
-    
+
     simulations.append(get_project_duration(X))
     # TODO TP1: Completar codigo
     # Esta funcion realiza n_sim simulaciones y analiza los resultados necesarios para el
