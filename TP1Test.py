@@ -75,9 +75,6 @@ def simulate_tasks_duration(graph_no_hire):
     # Sugerencia: recordar que la distribucion de la tarea i se encuentra en el
     # diccionario project_graph.d[i]
 
-    # Sacar el pass y reemplzar por el codigo
-    #pass
-    #VER SI USAMOS MÉTODO O DICCIONARIO DIRECTAMENTE
 
 def get_path_duration(path, tasks_times):
     pathduration = 0
@@ -112,9 +109,10 @@ def get_project_duration(graph_no_hire, tasks_times):
 
 
 def simulate(n_sim, graph_no_hire):
+    TD = simulate_tasks_duration(graph_no_hire)
     simulations = []
     for i in range(n_sim):
-        simulations.append(get_project_duration(graph_no_hire, tasks_times))
+        simulations.append(get_project_duration(graph_no_hire, TD))
     return simulations
     # TODO TP1: Completar codigo
     # Esta funcion realiza n_sim simulaciones y analiza los resultados necesarios para el
@@ -125,14 +123,13 @@ def simulate(n_sim, graph_no_hire):
     # Sacar el pass y reemplzar por el codigo
     pass
 
-def get_prob_in_range(vals, a, b):
+#def get_prob_in_range(vals, a, b):
     # TODO TP1: Completar codigo
     # Funcion auxiliar para analisis de resultados y calculo de probabilidades.
     # Dada una muestra de valores vals, calcula la proporcion de x in vals tales que
     # a < x <= b.
 
-    # Sacar el pass y reemplzar por el codigo
-    pass
+
 
 def main():
     # TODO TP1: Completar codigo
@@ -151,11 +148,13 @@ def main():
 
     print(graph_no_hire.dist_params[2])
 
+
     # TODO: simular en este contexto!
     TD = simulate_tasks_duration(graph_no_hire)
     print(TD)
     SM = simulate(1000, graph_no_hire)
     print(SM)
+
 
     # TODO: Analizar los resultados.
 
