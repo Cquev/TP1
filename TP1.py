@@ -64,8 +64,9 @@ def simulate_triangular(ps, ml, op):
 def simulate_tasks_duration(graph_no_hire):
     tasks_times = []
     for task in range(graph_no_hire.n):
-        tasks_times.append(simulate_triangular(graph_no_hire.dist_params[task][0], graph_no_hire.dist_params[task][1], graph_no_hire.dist_params[task][2]))
+        tasks_times.append(simulate_triangular(graph_no_hire.get_tasks_dist_params()[task][0], graph_no_hire.get_tasks_dist_params()[task][1], graph_no_hire.get_tasks_dist_params()[task][2]))
     return tasks_times
+
 
     # TP1 TODO: Completar codigo
     # Esta funcion el grafo con n tareas, cada cual con sus parametros de la
@@ -92,8 +93,7 @@ def get_project_duration(graph_no_hire, tasks_times):
     projectduration = 0
     paths = graph_no_hire.get_paths()
     for i in range(graph_no_hire.m):
-        path = paths[i]
-        path_duration = get_path_duration(path, tasks_times)
+        path_duration = get_path_duration(paths[i], tasks_times)
         if path_duration > projectduration:
             projectduration = path_duration
     return projectduration
@@ -131,7 +131,7 @@ def simulate(n_sim, graph_no_hire):
 def get_prob_in_range(vals, a, b):
     counter = 0
     for time in vals:
-        if time > a and time < b:
+        if time > a and time <= b:
             counter += 1
     return str(round((counter / len(vals))*100)) + "%"
 
@@ -154,25 +154,26 @@ def main():
 
     # Primer paso: consideramos el escenario sin contrataciones extra.
     graph_no_hire = ProjectGraph()
-    print(graph_no_hire.dist_params[2])
-    SM = simulate(1000, graph_no_hire)
+    vals = simulate(1000, graph_no_hire)
 
     # TODO: Analizar los resultados.
-    print(get_prob_in_range(SM, 0, incentive))
-    print(get_prob_in_range(SM, incentive, deadline))
-    print(get_prob_in_range(SM, deadline, 100))
+
+    print("Probabilidades de que el proyecto tarde: \n"+"(Sin contratar mano de obra extra)")
+    print("Menos de 40 semanas: " +get_prob_in_range(vals, 0, incentive))
+    print("Entre 40 y 47 semanas: " +get_prob_in_range(vals, incentive, deadline))
+    print("Más de 47 semanas: " +get_prob_in_range(vals, deadline, 100))
     # Segundo paso: analizar en el contexto que se hace la contratacion.
     # Esto lo representamos modifiando la duracion de las tarea 2.
     graph_hire = graph_no_hire
 
     graph_hire.dist_params[2] = (6.0, 9.0, 13.0)
-    print(graph_hire.dist_params[2])
 
-    SMH = simulate(1000, graph_hire)
+    vals_h = simulate(1000, graph_hire)
     # TODO: simular en este contexto!
-    print(get_prob_in_range(SMH, 0, incentive))
-    print(get_prob_in_range(SMH, incentive, deadline))
-    print(get_prob_in_range(SMH, deadline, 100))
+    print("Probabilidades de que el proyecto tarde: \n"+"(Contratando mano de obra extra)")
+    print("Menos de 40 semanas: " +get_prob_in_range(vals_h, 0, incentive))
+    print("Entre 40 y 47 semanas: " +get_prob_in_range(vals_h, incentive, deadline))
+    print("Más de 47 semanas: " +get_prob_in_range(vals_h, deadline, 100))
 
     # TODO: Analizar los resultados.
 
