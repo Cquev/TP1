@@ -61,11 +61,11 @@ def simulate_triangular(ps, ml, op):
         return triangular
     #opcional usar scipy para que se vea método de transformada inversa
 
-def simulate_tasks_duration(graph_no_hire):
-    tasks_times = []
-    for task in range(graph_no_hire.n):
-        tasks_times.append(simulate_triangular(graph_no_hire.get_tasks_dist_params()[task][0], graph_no_hire.get_tasks_dist_params()[task][1], graph_no_hire.get_tasks_dist_params()[task][2]))
-    return tasks_times
+def simulate_tasks_duration(project_graph):
+    ret = []
+    for i in range(project_graph.n):
+        ret.append(simulate_triangular(project_graph.get_tasks_dist_params()[i][0], project_graph.get_tasks_dist_params()[i][1], project_graph.get_tasks_dist_params()[i][2]))
+    return ret
 
 
     # TP1 TODO: Completar codigo
@@ -77,23 +77,23 @@ def simulate_tasks_duration(graph_no_hire):
     # diccionario project_graph.d[i]
 
 
-def get_path_duration(path, tasks_times):
+def get_path_duration(path, ret):
     pathduration = 0
     for task in path:
-        pathduration += tasks_times[task]
+        pathduration += ret[task]
     return pathduration
 
     # TODO TP1: Completar codigo
     # Dado un camino, representado por path y la secuencia de tareas, y la
-    # duracion de cada tarea (donde tasks_times[i] es la duracion de la i-esima
+    # duracion de cada tarea (donde ret[i] es la duracion de la i-esima
     # tarea, la funcion devuelve la duracion del camino dados esos tiempos.
 
 
-def get_project_duration(graph_no_hire, tasks_times):
+def get_project_duration(project_graph, ret):
     projectduration = 0
-    paths = graph_no_hire.get_paths()
-    for i in range(graph_no_hire.m):
-        path_duration = get_path_duration(paths[i], tasks_times)
+    paths = project_graph.get_paths()
+    for i in range(project_graph.m):
+        path_duration = get_path_duration(paths[i], ret)
         if path_duration > projectduration:
             projectduration = path_duration
     return projectduration
@@ -103,16 +103,16 @@ def get_project_duration(graph_no_hire, tasks_times):
 # paths = graph.get_paths()
 # max_duration = 0
 # for path in paths:
-#     new_duration = get_path_duration(path, tasks_times)
+#     new_duration = get_path_duration(path, ret)
 #     max_duration = max(max_duration, new_duration)
 #Ahi max_duration tiene la duracion del camino mas largo
 
 
-def simulate(n_sim, graph_no_hire):
+def simulate(n_sim, project_graph):
     vals = []
     for i in range(n_sim):
-        tasks_times = simulate_tasks_duration(graph_no_hire)
-        vals.append(get_project_duration(graph_no_hire, tasks_times))
+        ret = simulate_tasks_duration(project_graph)
+        vals.append(get_project_duration(project_graph, ret))
     return vals
     # TODO TP1: Completar codigo
     # Esta funcion realiza n_sim simulaciones y analiza los resultados necesarios para el
@@ -161,11 +161,10 @@ def main():
     print("Probabilidades de que el proyecto tarde: \n"+"(Sin contratar mano de obra extra)")
     print("Menos de 40 semanas: " +get_prob_in_range(vals, 0, incentive))
     print("Entre 40 y 47 semanas: " +get_prob_in_range(vals, incentive, deadline))
-    print("Más de 47 semanas: " +get_prob_in_range(vals, deadline, 100))
+    print("Más de 47 semanas: " +get_prob_in_range(vals, deadline, 1000))
     # Segundo paso: analizar en el contexto que se hace la contratacion.
     # Esto lo representamos modifiando la duracion de las tarea 2.
     graph_hire = graph_no_hire
-
     graph_hire.dist_params[2] = (6.0, 9.0, 13.0)
 
     vals_h = simulate(1000, graph_hire)
@@ -173,7 +172,7 @@ def main():
     print("Probabilidades de que el proyecto tarde: \n"+"(Contratando mano de obra extra)")
     print("Menos de 40 semanas: " +get_prob_in_range(vals_h, 0, incentive))
     print("Entre 40 y 47 semanas: " +get_prob_in_range(vals_h, incentive, deadline))
-    print("Más de 47 semanas: " +get_prob_in_range(vals_h, deadline, 100))
+    print("Más de 47 semanas: " +get_prob_in_range(vals_h, deadline, 1000))
 
     # TODO: Analizar los resultados.
 
