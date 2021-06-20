@@ -1,9 +1,5 @@
 #Importamos las librerías que utilizaremos para el código
-import math
-import statistics
 import random
-import matplotlib.pyplot as plt
-from scipy.stats import expon,uniform,triang
 import numpy as np
 import sys
 #Importamos la clase ProjectGraph desde el archivo en donde está
@@ -71,7 +67,7 @@ def get_prob_in_range(vals, a, b):
     for time in vals:
         if time > a and time <= b:
             counter += 1
-    return str(round(((counter / len(vals))*100), 2)) + "%"
+    return str(round(((counter / len(vals))*100), 1)) + "%"
 
 
 
@@ -102,8 +98,8 @@ def main():
     # Segundo paso: analizar en el contexto en donde se hace la contratacion.
     # Para ellos, creamos un objeto idéntico al creado en el escenario anterior
     # y modificamos el parámetro que contiene la duración de la tarea 2.
-    graph_hire = graph_no_hire
-    graph_hire._load_tasks_dist_params()[2] = (6.0, 9.0, 13.0)
+    graph_hire = ProjectGraph()
+    graph_hire.dist_params[2] = (6.0, 9.0, 13.0)
 
     # Obtenemos una lista con n_sim duraciones de proyectos simuladas en el
     # nuevo escenario.
